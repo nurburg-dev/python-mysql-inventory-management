@@ -1,0 +1,2 @@
+targetName: devmysql
+relativePath: src/db/init.sql

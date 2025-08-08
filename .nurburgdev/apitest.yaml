@@ -1,0 +1,129 @@
+test_name: Inventory Management API Tests
+
+stages:
+  - name: Test Create Item
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items"
+      method: POST
+      headers:
+        Content-Type: application/json
+      json:
+        name: "Test Laptop"
+        description: "A test laptop for API testing"
+        quantity: 50
+        price: 999.99
+        category: "Electronics"
+    response:
+      status_code: 201
+      headers:
+        content-type: application/json
+      json:
+        id: !anything
+        name: "Test Laptop"
+        description: "A test laptop for API testing"
+        quantity: 50
+        price: 999.99
+        category: "Electronics"
+      save:
+        json:
+          item_id: id
+
+  - name: Test Get Item by ID
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items/{item_id}"
+      method: GET
+    response:
+      status_code: 200
+      headers:
+        content-type: application/json
+      json:
+        id: "{item_id}"
+        name: "Test Laptop"
+        description: "A test laptop for API testing"
+        quantity: 50
+        price: 999.99
+        category: "Electronics"
+
+  - name: Test Create Another Item in Same Category
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items"
+      method: POST
+      headers:
+        Content-Type: application/json
+      json:
+        name: "Test Mouse"
+        description: "A test mouse for API testing"
+        quantity: 100
+        price: 29.99
+        category: "Electronics"
+    response:
+      status_code: 201
+
+  - name: Test Get Top Items by Category
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items/category/Electronics/top"
+      method: GET
+    response:
+      status_code: 200
+      headers:
+        content-type: application/json
+      json:
+        category: "Electronics"
+        items: !anything
+
+  - name: Test Create Temporary Block
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items/block/temporary"
+      method: POST
+      headers:
+        Content-Type: application/json
+      json:
+        itemId: "{item_id}"
+        quantity: 10
+    response:
+      status_code: 200
+      headers:
+        content-type: application/json
+      json:
+        blockId: !anything
+      save:
+        json:
+          block_id: blockId
+
+  - name: Test Make Block Permanent
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items/block/permanent"
+      method: POST
+      headers:
+        Content-Type: application/json
+      json:
+        blockId: "{block_id}"
+    response:
+      status_code: 200
+      headers:
+        content-type: application/json
+      json:
+        message: "Block made permanent successfully"
+
+  - name: Test Cleanup Expired Blocks
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items/cleanup/expired-blocks"
+      method: POST
+    response:
+      status_code: 200
+      headers:
+        content-type: application/json
+      json:
+        message: !anything
+        cleaned_count: !anything
+
+  - name: Test Get Non-existent Item
+    request:
+      url: "{tavern.env_vars.API_HOST}/api/items/99999"
+      method: GET
+    response:
+      status_code: 404
+      headers:
+        content-type: application/json
+      json:
+        detail: "Item not found"

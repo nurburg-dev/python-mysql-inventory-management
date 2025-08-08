@@ -1,0 +1,2 @@
+-- Database initialization script
+-- TODO: Add your database schema here

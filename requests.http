@@ -1,0 +1,37 @@
+### Get Item by ID
+GET http://localhost:8000/api/items/1
+
+### Create New Item
+POST http://localhost:8000/api/items
+Content-Type: application/json
+
+{
+  "name": "Sample Product",
+  "description": "A sample product for testing",
+  "quantity": 50,
+  "price": 29.99,
+  "category": "Electronics"
+}
+
+### Get Top Items by Category
+GET http://localhost:8000/api/items/category/Electronics/top
+
+### Create Temporary Block
+POST http://localhost:8000/api/items/block/temporary
+Content-Type: application/json
+
+{
+  "itemId": 1,
+  "quantity": 5
+}
+
+### Convert to Permanent Block
+POST http://localhost:8000/api/items/block/permanent
+Content-Type: application/json
+
+{
+  "blockId": 1
+}
+
+### Clean Expired Blocks
+POST http://localhost:8000/api/items/cleanup/expired-blocks
