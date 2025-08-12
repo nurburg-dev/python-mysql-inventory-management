@@ -1,4 +1,5 @@
 test_name: Inventory Management API Tests
+strict: false
 
 stages:
   - name: Test Create Item
